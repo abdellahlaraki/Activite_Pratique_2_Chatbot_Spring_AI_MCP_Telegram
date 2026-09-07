@@ -1,6 +1,6 @@
 # Activité pratique N°2 — Chatbot Spring AI MCP Telegram
 
-Projet réalisé à partir de l'activité proposée par **Pr. Mohamed YOUSSFI**.
+
 
 Le projet couvre les trois parties demandées :
 
