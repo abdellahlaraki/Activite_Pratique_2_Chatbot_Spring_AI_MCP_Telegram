@@ -1,0 +1,28 @@
+server:
+  port: 8989
+
+spring:
+  application:
+    name: mcp-business-server
+  ai:
+    mcp:
+      server:
+        name: business-tools-mcp-server
+        version: 1.0.0
+        type: SYNC
+        protocol: STREAMABLE
+        instructions: Outils de consultation des microservices clients et inventaire.
+        streamable-http:
+          mcp-endpoint: /mcp
+
+services:
+  customer:
+    url: ${CUSTOMER_SERVICE_URL:http://localhost:8081}
+  inventory:
+    url: ${INVENTORY_SERVICE_URL:http://localhost:8082}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

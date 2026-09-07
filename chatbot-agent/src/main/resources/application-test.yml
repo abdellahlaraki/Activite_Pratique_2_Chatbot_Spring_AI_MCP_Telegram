@@ -1,0 +1,5 @@
+telegram:
+  bot:
+    enabled: false
+rag:
+  index-on-startup: false

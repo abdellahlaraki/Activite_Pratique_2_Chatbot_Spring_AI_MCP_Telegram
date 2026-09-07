@@ -1,0 +1,13 @@
+ACTIVITÉ PRATIQUE N°2 — CHATBOT SPRING AI MCP TELEGRAM
+
+Le chatbot est un microservice Spring Boot nommé chatbot-agent.
+Il écoute sur le port 8087 et communique avec un modèle OpenAI au moyen de Spring AI.
+Chaque conversation est isolée grâce à un identifiant de conversation. Pour Telegram, cet identifiant est construit à partir du chatId.
+
+Le serveur MCP écoute sur le port 8989. Il expose uniquement des outils de consultation des clients, des produits et du stock. Il appelle le customer-service sur le port 8081 et l'inventory-service sur le port 8082.
+
+Le système RAG indexe les fichiers PDF, TXT et Markdown placés dans data/documents. Il découpe les documents en fragments, calcule leurs embeddings et recherche les fragments proches de la question de l'utilisateur.
+
+Le discovery-service utilise Eureka sur le port 8761. La gateway écoute sur le port 8888 et route les URL /api/chat, /api/rag, /api/customers et /api/products vers les microservices correspondants.
+
+En production, les clés OpenAI et Telegram doivent être stockées dans des variables d'environnement. Le bot doit authentifier ses utilisateurs, appliquer des autorisations par outil, limiter le nombre de requêtes et journaliser les appels sensibles.

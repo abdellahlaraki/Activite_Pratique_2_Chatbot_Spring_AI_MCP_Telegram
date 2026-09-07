@@ -1,0 +1,50 @@
+services:
+  discovery-service:
+    build: ./discovery-service
+    ports: ["8761:8761"]
+
+  customer-service:
+    build: ./customer-service
+    environment:
+      EUREKA_URL: http://discovery-service:8761/eureka
+    ports: ["8081:8081"]
+    depends_on: [discovery-service]
+
+  inventory-service:
+    build: ./inventory-service
+    environment:
+      EUREKA_URL: http://discovery-service:8761/eureka
+    ports: ["8082:8082"]
+    depends_on: [discovery-service]
+
+  mcp-business-server:
+    build: ./mcp-business-server
+    environment:
+      CUSTOMER_SERVICE_URL: http://customer-service:8081
+      INVENTORY_SERVICE_URL: http://inventory-service:8082
+    ports: ["8989:8989"]
+    depends_on: [customer-service, inventory-service]
+
+  chatbot-agent:
+    build: ./chatbot-agent
+    restart: on-failure
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_CHAT_MODEL: ${OPENAI_CHAT_MODEL:-gpt-4o-mini}
+      OPENAI_EMBEDDING_MODEL: ${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
+      TELEGRAM_BOT_ENABLED: ${TELEGRAM_BOT_ENABLED:-false}
+      TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      EUREKA_URL: http://discovery-service:8761/eureka
+      MCP_SERVER_URL: http://mcp-business-server:8989
+    ports: ["8087:8087"]
+    volumes:
+      - ./data/documents:/app/data/documents:ro
+    depends_on: [mcp-business-server]
+
+  gateway-service:
+    build: ./gateway-service
+    environment:
+      EUREKA_URL: http://discovery-service:8761/eureka
+    ports: ["8888:8888"]
+    depends_on: [discovery-service]
